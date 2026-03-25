@@ -63,21 +63,21 @@ export const siteApi = {
   getAll: () => api.get<Site[]>('/sites'),
   get: (id: string) => api.get<Site>(`/sites/${id}`),
   create: (name: string, entropyMode: string, sanityThreshold: number) =>
-    api.post<Site>(`/sites?name=${encodeURIComponent(name)}&entropyMode=${entropyMode}&sanityThreshold=${sanityThreshold}`),
+    api.post<Site>('/sites', null, { params: { name, entropyMode, sanityThreshold } }),
   delete: (id: string) => api.delete(`/sites/${id}`),
   updateEntropy: (id: string, mode: string) =>
-    api.patch<Site>(`/sites/${id}/entropy?mode=${mode}`),
+    api.patch<Site>(`/sites/${id}/entropy`, null, { params: { mode } }),
   updateIntensity: (id: string, intensity: number) =>
-    api.patch<Site>(`/sites/${id}/intensity?intensity=${intensity}`),
+    api.patch<Site>(`/sites/${id}/intensity`, null, { params: { intensity } }),
 };
 
 export const entryApi = {
   getBySite: (siteId: string) => api.get<Entry[]>(`/sites/${siteId}/entries`),
   get: (siteId: string, slug: string) => api.get<Entry>(`/sites/${siteId}/entries/${slug}`),
   create: (siteId: string, title: string, slug: string, content: string) =>
-    api.post<Entry>(`/sites/${siteId}/entries?title=${encodeURIComponent(title)}&slug=${encodeURIComponent(slug)}&content=${encodeURIComponent(content)}`),
+    api.post<Entry>(`/sites/${siteId}/entries`, null, { params: { title, slug, content } }),
   update: (siteId: string, slug: string, content: string) =>
-    api.put<Entry>(`/sites/${siteId}/entries/${slug}?content=${encodeURIComponent(content)}`),
+    api.put<Entry>(`/sites/${siteId}/entries/${slug}`, null, { params: { content } }),
   delete: (siteId: string, slug: string) =>
     api.delete(`/sites/${siteId}/entries/${slug}`),
   corrupt: (siteId: string, slug: string, viewerHash: string) =>

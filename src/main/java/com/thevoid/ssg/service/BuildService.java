@@ -1,5 +1,6 @@
 package com.thevoid.ssg.service;
 
+import com.thevoid.ssg.model.dto.BuildLogDto;
 import com.thevoid.ssg.model.dto.BuildResultDto;
 import com.thevoid.ssg.model.entity.BuildLog;
 import com.thevoid.ssg.model.entity.Entry;
@@ -132,7 +133,23 @@ public class BuildService {
     }
 
     @Transactional(readOnly = true)
-    public List<BuildLog> getBuildHistory(String siteId) {
-        return buildLogRepository.findBySiteIdOrderByTimestampDesc(siteId);
+    public List<BuildLogDto> getBuildHistory(String siteId) {
+        return buildLogRepository.findBySiteIdOrderByTimestampDesc(siteId).stream()
+                .map(this::toBuildLogDto)
+                .toList();
+    }
+
+    private BuildLogDto toBuildLogDto(BuildLog log) {
+        return new BuildLogDto(
+                log.getId(),
+                log.getTimestamp(),
+                log.getNarrative(),
+                log.getEntityDetections(),
+                log.getCorruptedEntries(),
+                log.getBuildDurationMs(),
+                log.getBuildSuccessful(),
+                log.getWarningsCount(),
+                log.getWhispersGenerated()
+        );
     }
 }

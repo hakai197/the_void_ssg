@@ -3,6 +3,7 @@ package com.thevoid.ssg.service;
 import com.thevoid.ssg.model.dto.SiteDto;
 import com.thevoid.ssg.model.entity.Site;
 import com.thevoid.ssg.model.enums.EntropyMode;
+import com.thevoid.ssg.repository.EntryRepository;
 import com.thevoid.ssg.repository.SiteRepository;
 import com.thevoid.ssg.util.HashGenerator;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class SiteService {
 
     private final SiteRepository siteRepository;
+    private final EntryRepository entryRepository;
     private final HashGenerator hashGenerator;
 
     @Transactional
@@ -103,7 +105,7 @@ public class SiteService {
                 site.getEntropyMode(),
                 site.getSanityThreshold(),
                 site.getCorruptionIntensity(),
-                site.getEntries().size(),
+                entryRepository.countBySiteId(site.getId()),
                 site.getLastBuilt(),
                 site.getEntityWard()
         );

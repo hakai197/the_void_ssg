@@ -29,5 +29,8 @@ public interface EntryRepository extends JpaRepository<Entry, String> {
     @Query("SELECT e FROM Entry e WHERE e.entityInfluence IS NOT NULL")
     List<Entry> findEntityInfluencedEntries();
 
+    @Query("SELECT COUNT(e) FROM Entry e WHERE e.site.id = :siteId")
+    int countBySiteId(@Param("siteId") String siteId);
+
     Page<Entry> findBySiteId(String siteId, Pageable pageable);
 }

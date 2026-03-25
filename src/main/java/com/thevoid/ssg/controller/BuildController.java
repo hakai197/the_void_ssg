@@ -1,7 +1,7 @@
 package com.thevoid.ssg.controller;
 
+import com.thevoid.ssg.model.dto.BuildLogDto;
 import com.thevoid.ssg.model.dto.BuildResultDto;
-import com.thevoid.ssg.model.entity.BuildLog;
 import com.thevoid.ssg.service.BuildService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,8 @@ public class BuildController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BuildLog>> getBuildHistory(@PathVariable String siteId) {
-        List<BuildLog> history = buildService.getBuildHistory(siteId);
+    public ResponseEntity<List<BuildLogDto>> getBuildHistory(@PathVariable String siteId) {
+        List<BuildLogDto> history = buildService.getBuildHistory(siteId);
         return ResponseEntity.ok(history);
     }
 }
