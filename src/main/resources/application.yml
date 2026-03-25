@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/the_void?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: Postgres1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # Let Hibernate create/update tables
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect  # Use MySQLDialect instead of MySQL8Dialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+    show-sql: true
+
+  flyway:
+    enabled: false  # Disable Flyway for now
+
+  shell:
+    interactive:
+      enabled: true

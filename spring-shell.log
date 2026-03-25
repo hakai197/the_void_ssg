@@ -1,0 +1,10 @@
+1774459281439:help
+1774459305986:void init "My First Grimoire" DAILY 50
+1774459333551:void init --name "My First Grimoire" --mode DAILY --sanity 50
+1774459340103:void init MyFirstGrimoire DAILY 50
+1774459367379:help
+1774459518111:void init "My Grimoire" DAILY 50
+1774459676924:void list
+1774459701597:void entry add <your-site-id> --title "The Call of Cthulhu" --slug "call" --content "# The Call of Cthulhu\n\n\n\nIn his house at R'lyeh, dead Cthulhu waits dreaming.\n\n\n\n## The Beginning\n\n\n\nThe most merciful thing in the world, I think, is the inability of the human mind to correlate all its contents. We live on a placid island of ignorance in the midst of black seas of infinity, and it was not meant that we should voyage far.\n\n\n\n## The Horror\n\n\n\nThat is not dead which can eternal lie,\n\nAnd with strange aeons even death may die."
+1774459719537:void list
+1774459760586:void init "Cthulhu Mythos" DAILY 50
