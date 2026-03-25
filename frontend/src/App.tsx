@@ -21,7 +21,8 @@ function App() {
       <div className="app">
         <header className="app-header">
           <a href="/" className="header-link">
-            <h1>🌀 THE VOID</h1>
+            <img src="/void-logo.jpg" alt="The Void" className="header-logo" />
+            <h1>THE VOID</h1>
             <p className="subtitle">Static Site Generator with Cosmic Horror</p>
           </a>
         </header>

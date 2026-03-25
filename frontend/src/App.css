@@ -7,7 +7,7 @@
 body {
   background: #0a0a0a;
   color: #e0e0e0;
-  font-family: 'Courier New', monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   min-height: 100vh;
 }
 
@@ -45,7 +45,18 @@ a {
   display: block;
 }
 
+.header-logo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: block;
+  filter: drop-shadow(0 0 15px rgba(156, 39, 176, 0.5));
+}
+
 .app-header h1 {
+  font-family: 'Special Elite', 'Courier New', monospace;
   font-size: 3rem;
   color: #9c27b0;
   text-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
@@ -96,7 +107,7 @@ a {
   border-radius: 4px;
   cursor: pointer;
   color: white;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
 }
 
 /* --- Sites header & create form --- */
@@ -108,6 +119,7 @@ a {
 }
 
 .sites-header h2 {
+  font-family: 'Special Elite', 'Courier New', monospace;
   color: #9c27b0;
   font-size: 1.5rem;
 }
@@ -119,7 +131,7 @@ a {
   border-radius: 8px;
   color: white;
   cursor: pointer;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   transition: all 0.3s ease;
   text-align: center;
   display: inline-block;
@@ -145,7 +157,7 @@ a {
   background: transparent;
   color: #ce93d8;
   cursor: pointer;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   transition: all 0.2s;
   text-align: center;
   display: inline-block;
@@ -162,7 +174,7 @@ a {
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
   cursor: pointer;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   transition: all 0.2s;
 }
 
@@ -190,7 +202,7 @@ a {
   padding: 0.75rem;
   border-radius: 4px;
   color: white;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
 }
 
 .create-form input:focus {
@@ -204,7 +216,7 @@ a {
   padding: 0.75rem;
   border-radius: 4px;
   color: white;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
 }
 
 .create-form select:focus {
@@ -219,7 +231,7 @@ a {
   border-radius: 4px;
   color: white;
   cursor: pointer;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
 }
 
 .sanity-label {
@@ -316,7 +328,7 @@ a {
 }
 
 .ward {
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   color: #ff9800;
   font-size: 0.8rem;
   word-break: break-all;
@@ -330,7 +342,7 @@ a {
   border-radius: 6px;
   color: white;
   cursor: pointer;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   transition: all 0.3s ease;
   display: block;
   text-align: center;
@@ -575,7 +587,7 @@ a {
   padding: 0.5rem;
   border-radius: 4px;
   color: white;
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
 }
 
 .range-input {
@@ -630,7 +642,7 @@ a {
 .entry-content pre {
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: 'Courier New', monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   line-height: 1.6;
   color: #ccc;
 }
@@ -642,7 +654,7 @@ a {
   border-radius: 8px;
   padding: 1.25rem;
   color: #e0e0e0;
-  font-family: 'Courier New', monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   font-size: 0.95rem;
   line-height: 1.6;
   resize: vertical;
@@ -661,7 +673,7 @@ a {
 }
 
 .editor-actions button {
-  font-family: monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
 }
 
 /* --- Corruption preview overlay --- */
@@ -727,7 +739,7 @@ a {
 .corruption-content pre {
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: 'Courier New', monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   line-height: 1.5;
   color: #e57373;
 }
@@ -786,7 +798,7 @@ a {
   border-radius: 6px;
   padding: 0.75rem;
   color: #e0e0e0;
-  font-family: 'Courier New', monospace;
+  font-family: 'Courier Prime', 'Courier New', monospace;
   font-size: 0.95rem;
 }
 
