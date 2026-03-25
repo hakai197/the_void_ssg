@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { siteApi, entryApi, buildApi } from '../services/api';
 import type { Site, Entry, BuildResult, BuildLog } from '../services/api';
+import GooeyNav from '../components/GooeyNav';
 
 const ENTROPY_MODES = ['NONE', 'DAILY', 'USER_BASED', 'CRYPTOGRAPHIC'];
 
@@ -105,16 +106,19 @@ export default function SiteDetailPage() {
             {site.entropyMode} · {site.corruptionIntensity}% corruption · {site.entryCount} entries
           </p>
         </div>
-        <div className="header-actions">
-          <button
-            className="btn-primary"
-            onClick={triggerBuild}
-            disabled={building}
-          >
-            {building ? '⏳ Building...' : '⚡ Trigger Build'}
-          </button>
-          <button className="btn-danger" onClick={deleteSite}>🕳️ Delete</button>
-        </div>
+        <GooeyNav
+          items={[
+            { label: building ? '⏳ Building...' : '⚡ Trigger Build', onClick: building ? undefined : triggerBuild },
+            { label: '🕳️ Delete', onClick: deleteSite },
+          ]}
+          initialActiveIndex={0}
+          particleCount={12}
+          particleDistances={[90, 10]}
+          particleR={80}
+          animationTime={500}
+          timeVariance={200}
+          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+        />
       </div>
 
       {error && (
@@ -137,17 +141,20 @@ export default function SiteDetailPage() {
         </div>
       )}
 
-      <div className="tabs">
-        <button className={activeTab === 'entries' ? 'tab active' : 'tab'} onClick={() => setActiveTab('entries')}>
-          Entries ({entries.length})
-        </button>
-        <button className={activeTab === 'builds' ? 'tab active' : 'tab'} onClick={() => setActiveTab('builds')}>
-          Build History ({builds.length})
-        </button>
-        <button className={activeTab === 'settings' ? 'tab active' : 'tab'} onClick={() => setActiveTab('settings')}>
-          Settings
-        </button>
-      </div>
+      <GooeyNav
+        items={[
+          { label: `Entries (${entries.length})`, onClick: () => setActiveTab('entries') },
+          { label: `Build History (${builds.length})`, onClick: () => setActiveTab('builds') },
+          { label: 'Settings', onClick: () => setActiveTab('settings') },
+        ]}
+        initialActiveIndex={0}
+        particleCount={15}
+        particleDistances={[90, 10]}
+        particleR={100}
+        animationTime={600}
+        timeVariance={300}
+        colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+      />
 
       {activeTab === 'entries' && (
         <div className="tab-content">

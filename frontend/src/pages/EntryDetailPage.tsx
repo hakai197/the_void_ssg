@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { entryApi } from '../services/api';
 import type { Entry, CorruptionPreview } from '../services/api';
+import GooeyNav from '../components/GooeyNav';
 
 export default function EntryDetailPage() {
   const { siteId, slug } = useParams<{ siteId: string; slug: string }>();
@@ -88,19 +89,23 @@ export default function EntryDetailPage() {
           <h2>{entry.title}</h2>
           <p className="subtitle">/{entry.slug} · {entry.viewCount} views · Created {new Date(entry.createdAt).toLocaleDateString()}</p>
         </div>
-        <div className="header-actions">
-          <button
-            className="btn-primary btn-small"
-            onClick={previewCorruption}
-            disabled={corruptionLoading}
-          >
-            {corruptionLoading ? '⏳ Corrupting...' : '🌀 Preview Corruption'}
-          </button>
-          <button className="btn-small" onClick={() => setEditing(!editing)}>
-            {editing ? 'Cancel Edit' : '✏️ Edit'}
-          </button>
-          <button className="btn-danger btn-small" onClick={deleteEntry}>🗑️ Delete</button>
-        </div>
+        <GooeyNav
+          items={[
+            {
+              label: corruptionLoading ? '⏳ Corrupting...' : '🌀 Preview Corruption',
+              onClick: corruptionLoading ? undefined : previewCorruption,
+            },
+            { label: editing ? 'Cancel Edit' : '✏️ Edit', onClick: () => setEditing(!editing) },
+            { label: '🗑️ Delete', onClick: deleteEntry },
+          ]}
+          initialActiveIndex={0}
+          particleCount={12}
+          particleDistances={[90, 10]}
+          particleR={80}
+          animationTime={500}
+          timeVariance={200}
+          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+        />
       </div>
 
       {error && (

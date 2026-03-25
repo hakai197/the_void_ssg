@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { siteApi } from '../services/api';
 import type { Site } from '../services/api';
+import GooeyNav from '../components/GooeyNav';
 
 const ENTROPY_MODES = ['NONE', 'DAILY', 'USER_BASED', 'CRYPTOGRAPHIC'];
 
@@ -56,9 +57,18 @@ export default function SiteListPage() {
     <div className="page">
       <div className="sites-header">
         <h2>Grimoires</h2>
-        <button className="btn-primary" onClick={() => setShowCreateForm(!showCreateForm)}>
-          {showCreateForm ? 'Cancel' : '+ Conjure New'}
-        </button>
+        <GooeyNav
+          items={[
+            { label: showCreateForm ? 'Cancel' : '+ Conjure New', onClick: () => setShowCreateForm(!showCreateForm) },
+          ]}
+          initialActiveIndex={0}
+          particleCount={10}
+          particleDistances={[90, 10]}
+          particleR={80}
+          animationTime={500}
+          timeVariance={200}
+          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+        />
       </div>
 
       {error && (
