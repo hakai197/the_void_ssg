@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { siteApi, entryApi, buildApi } from '../services/api';
 import type { Site, Entry, BuildResult, BuildLog } from '../services/api';
 import GooeyNav from '../components/GooeyNav';
+import VoidModal from '../components/VoidModal';
 
 const ENTROPY_MODES = ['NONE', 'DAILY', 'USER_BASED', 'CRYPTOGRAPHIC'];
 
@@ -27,6 +28,7 @@ export default function SiteDetailPage() {
 
   // Tab state
   const [activeTab, setActiveTab] = useState<'entries' | 'builds' | 'settings'>('entries');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (siteId) loadAll();
@@ -80,13 +82,17 @@ export default function SiteDetailPage() {
 
   const deleteSite = async () => {
     if (!site) return;
-    if (window.confirm(`Consign "${site.name}" to oblivion? This cannot be undone.`)) {
-      try {
-        await siteApi.delete(siteId!);
-        navigate('/');
-      } catch {
-        setError('Failed to delete site.');
-      }
+    setShowDeleteConfirm(true);
+  };
+
+  const executeDelete = async () => {
+    try {
+      await siteApi.delete(siteId!);
+      navigate('/');
+    } catch {
+      setError('Failed to delete site.');
+    } finally {
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -267,6 +273,16 @@ export default function SiteDetailPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {showDeleteConfirm && site && (
+        <VoidModal
+          message={`Consign "${site.name}" to oblivion? This cannot be undone.`}
+          confirmText="Consign to Oblivion"
+          cancelText="Turn Back"
+          onConfirm={executeDelete}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
       )}
     </div>
   );

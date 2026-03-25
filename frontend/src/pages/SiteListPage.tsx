@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { siteApi } from '../services/api';
 import type { Site } from '../services/api';
 import GooeyNav from '../components/GooeyNav';
+import VoidModal from '../components/VoidModal';
 
 const ENTROPY_MODES = ['NONE', 'DAILY', 'USER_BASED', 'CRYPTOGRAPHIC'];
 
@@ -14,6 +15,7 @@ export default function SiteListPage() {
   const [newSiteName, setNewSiteName] = useState('');
   const [newEntropyMode, setNewEntropyMode] = useState('DAILY');
   const [newSanity, setNewSanity] = useState(50);
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => { loadSites(); }, []);
 
@@ -43,13 +45,18 @@ export default function SiteListPage() {
   };
 
   const deleteSite = async (id: string, name: string) => {
-    if (window.confirm(`Consign "${name}" to oblivion? This cannot be undone.`)) {
-      try {
-        await siteApi.delete(id);
-        loadSites();
-      } catch {
-        setError('Failed to delete site');
-      }
+    setConfirmDelete({ id, name });
+  };
+
+  const executeDelete = async () => {
+    if (!confirmDelete) return;
+    try {
+      await siteApi.delete(confirmDelete.id);
+      loadSites();
+    } catch {
+      setError('Failed to delete site');
+    } finally {
+      setConfirmDelete(null);
     }
   };
 
@@ -128,6 +135,16 @@ export default function SiteListPage() {
             </div>
           ))}
         </div>
+      )}
+
+      {confirmDelete && (
+        <VoidModal
+          message={`Consign "${confirmDelete.name}" to oblivion? This cannot be undone.`}
+          confirmText="Consign to Oblivion"
+          cancelText="Turn Back"
+          onConfirm={executeDelete}
+          onCancel={() => setConfirmDelete(null)}
+        />
       )}
     </div>
   );

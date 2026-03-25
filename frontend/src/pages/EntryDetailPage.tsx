@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { entryApi } from '../services/api';
 import type { Entry, CorruptionPreview } from '../services/api';
 import GooeyNav from '../components/GooeyNav';
+import VoidModal from '../components/VoidModal';
 
 export default function EntryDetailPage() {
   const { siteId, slug } = useParams<{ siteId: string; slug: string }>();
@@ -20,6 +21,7 @@ export default function EntryDetailPage() {
   const [corruption, setCorruption] = useState<CorruptionPreview | null>(null);
   const [showCorruption, setShowCorruption] = useState(false);
   const [corruptionLoading, setCorruptionLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (siteId && slug) loadEntry();
@@ -51,13 +53,17 @@ export default function EntryDetailPage() {
 
   const deleteEntry = async () => {
     if (!entry) return;
-    if (window.confirm(`Delete "${entry.title}"? This cannot be undone.`)) {
-      try {
-        await entryApi.delete(siteId!, slug!);
-        navigate(`/site/${siteId}`);
-      } catch {
-        setError('Failed to delete entry.');
-      }
+    setShowDeleteConfirm(true);
+  };
+
+  const executeDelete = async () => {
+    try {
+      await entryApi.delete(siteId!, slug!);
+      navigate(`/site/${siteId}`);
+    } catch {
+      setError('Failed to delete entry.');
+    } finally {
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -172,6 +178,16 @@ export default function EntryDetailPage() {
             )}
           </div>
         </div>
+      )}
+
+      {showDeleteConfirm && entry && (
+        <VoidModal
+          message={`Delete "${entry.title}"? This cannot be undone.`}
+          confirmText="Delete Entry"
+          cancelText="Turn Back"
+          onConfirm={executeDelete}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
       )}
     </div>
   );

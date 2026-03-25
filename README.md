@@ -12,6 +12,14 @@ Built with **Java 21 + Spring Boot 3.2** on the backend, **React + TypeScript + 
 
 ---
 
+## What is The Void SSG?
+
+At its core, The Void SSG is a blog engine — you create sites, write markdown entries, and publish them. But the twist is the Lovecraftian corruption layer on top: your content gradually degrades with eldritch symbols, entries get "influenced" by cosmic entities when you mention them, and different readers may see different (or hidden) content based on their "sanity threshold."
+
+The build process generates narrative logs styled like terminal output, telling the story of what happened to your content. Navigation links can be obfuscated or hidden entirely depending on who's reading. Think of it as a CMS where the content fights back the more you use it — a cursed journal that rewrites itself.
+
+---
+
 ## Table of Contents
 
 - [Overview](#overview)

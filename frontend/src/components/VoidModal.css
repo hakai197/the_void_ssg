@@ -1,0 +1,69 @@
+.void-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: voidFadeIn 0.3s ease;
+}
+
+@keyframes voidFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes voidSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.void-modal {
+  background: #121218;
+  border: 1px solid #4a0e4e;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow:
+    0 0 40px rgba(156, 39, 176, 0.3),
+    0 0 80px rgba(156, 39, 176, 0.1);
+  animation: voidSlideUp 0.3s ease;
+}
+
+.void-modal-sigil {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 8px rgba(156, 39, 176, 0.6));
+}
+
+.void-modal-message {
+  color: #ccc;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.void-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.void-modal-confirm {
+  padding: 0.6rem 1.5rem !important;
+  font-size: 1rem !important;
+}
+
+.void-modal-cancel {
+  padding: 0.6rem 1.5rem !important;
+  font-size: 1rem !important;
+}

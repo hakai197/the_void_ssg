@@ -112,24 +112,25 @@ export default function GooeyNav({
 
   const handleClick = (e: React.MouseEvent<HTMLLIElement>, index: number) => {
     const liEl = e.currentTarget;
-    if (activeIndex === index) return;
 
-    setActiveIndex(index);
-    updateEffectPosition(liEl);
+    if (activeIndex !== index) {
+      setActiveIndex(index);
+      updateEffectPosition(liEl);
 
-    if (filterRef.current) {
-      const particles = filterRef.current.querySelectorAll('.particle');
-      particles.forEach((p) => filterRef.current!.removeChild(p));
-    }
+      if (filterRef.current) {
+        const particles = filterRef.current.querySelectorAll('.particle');
+        particles.forEach((p) => filterRef.current!.removeChild(p));
+      }
 
-    if (textRef.current) {
-      textRef.current.classList.remove('active');
-      void textRef.current.offsetWidth;
-      textRef.current.classList.add('active');
-    }
+      if (textRef.current) {
+        textRef.current.classList.remove('active');
+        void textRef.current.offsetWidth;
+        textRef.current.classList.add('active');
+      }
 
-    if (filterRef.current) {
-      makeParticles(filterRef.current);
+      if (filterRef.current) {
+        makeParticles(filterRef.current);
+      }
     }
 
     items[index]?.onClick?.();
