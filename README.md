@@ -9,6 +9,7 @@ Built with **Java 21 + Spring Boot 3.2** on the backend, **React + TypeScript + 
 ![React](https://img.shields.io/badge/React-19-blue)
 ![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)
 ![MySQL](https://img.shields.io/badge/MySQL-8-orange)
+![Ollama](https://img.shields.io/badge/Ollama-Local%20AI-red)
 
 ---
 
@@ -50,6 +51,8 @@ Builds generate ANSI-formatted narratives describing the corruption process, and
 - **Viewer-aware navigation** — Links are deterministically shown, hidden, or obfuscated per viewer
 - **Interactive CLI** — Full Spring Shell interface with formatted, color-coded terminal output
 - **Fluid WebGL background** — Three.js Navier-Stokes fluid simulation on the frontend
+- **AI journal generation** — Ollama-powered local AI writes hallucinatory entries while you're away, channeling eldritch entities through your content
+- **Content channeling** — Existing entries can be "channeled" through the void, appending AI-generated continuations that escalate the cosmic horror
 - **Java 21 virtual threads** — Async builds and Tomcat requests run on virtual threads
 
 ---
@@ -57,10 +60,10 @@ Builds generate ANSI-formatted narratives describing the corruption process, and
 ## Architecture
 
 ```
-┌─────────────────────┐     ┌─────────────────────┐
-│   React Frontend    │────▶│   Spring Boot API   │
-│  (Vite + Three.js)  │     │   (port 8080)       │
-└─────────────────────┘     └────────┬────────────┘
+┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
+│   React Frontend    │────▶│   Spring Boot API   │────▶│   Ollama (Local AI) │
+│  (Vite + Three.js)  │     │   (port 8080)       │     │   (port 11434)      │
+└─────────────────────┘     └────────┬────────────┘     └─────────────────────┘
                                      │
                             ┌────────▼────────────┐
                             │   Spring Shell CLI   │
@@ -75,6 +78,7 @@ Builds generate ANSI-formatted narratives describing the corruption process, and
 |---|---|
 | Backend | Java 21, Spring Boot 3.2, Spring Data JPA, Spring Shell 3.2 |
 | Frontend | React 19, TypeScript, Vite, Three.js, Axios, React Router |
+| AI | Ollama (local), llama3.1:8b (default, configurable) |
 | Database | MySQL 8, Flyway (migrations available, Hibernate DDL active) |
 | Build | Maven, npm |
 
@@ -88,6 +92,7 @@ Builds generate ANSI-formatted narratives describing the corruption process, and
 - Maven 3.9+
 - Node.js 18+
 - MySQL 8+
+- [Ollama](https://ollama.com/) (for AI journal generation)
 
 ### Database Setup
 
@@ -98,6 +103,18 @@ CREATE DATABASE the_void;
 ```
 
 The app uses Hibernate `ddl-auto: update` by default, so tables are created automatically on startup. A Flyway migration is also available at `src/main/resources/db/migration/V1_init_schema.sql` if you prefer managed migrations.
+
+### Ollama Setup
+
+Install Ollama and pull a model:
+
+```bash
+# Install from https://ollama.com/
+# Then pull the default model:
+ollama pull llama3.1:8b
+```
+
+Ollama runs as a local service on port **11434**. No API keys, no cloud costs — everything runs on your machine. The `llama3.1:8b` model (~4.7GB) works well on machines with 8GB+ RAM. For faster generation on lower-end hardware, use `llama3.2:3b` (~2GB) and update the model in `application.yml`.
 
 ### Backend
 
@@ -176,6 +193,8 @@ The Spring Shell CLI provides a full interface for managing sites and entries.
 | `PUT` | `/api/sites/{siteId}/entries/{slug}?content=...` | Update entry |
 | `DELETE` | `/api/sites/{siteId}/entries/{slug}` | Delete entry |
 | `GET` | `/api/sites/{siteId}/entries/{slug}/corrupt` | Preview corruption (header: `X-Viewer-Hash`) |
+| `POST` | `/api/sites/{siteId}/entries/generate` | Generate a new AI-written journal entry |
+| `POST` | `/api/sites/{siteId}/entries/{slug}/channel` | Channel existing entry through the void (AI continuation) |
 
 ### Builds — `/api/sites/{siteId}/builds`
 
@@ -193,14 +212,20 @@ The React frontend provides a visual interface for managing grimoires.
 | Route | Page | Description |
 |---|---|---|
 | `/` | Site List | Card grid of all grimoires with create form |
-| `/site/:siteId` | Site Detail | Tabbed view — Entries, Build History, Settings |
+| `/site/:siteId` | Site Detail | Tabbed view — Entries, Build History, Settings. "Channel the Void" button generates new AI entries. |
 | `/site/:siteId/entries/new` | Entry Create | Form with auto-generated slug |
-| `/site/:siteId/entries/:slug` | Entry Detail | Full content view with inline editing and corruption preview |
+| `/site/:siteId/entries/:slug` | Entry Detail | Full content view with inline editing, corruption preview, and "Channel the Void" button to AI-continue the entry |
 
 ### Visual Components
 
 - **LiquidEther** — Full-page Three.js fluid simulation (Navier-Stokes) in cosmic purple/green. Animates autonomously and responds to mouse interaction.
 - **GooeyNav** — Animated tab/action bar with particle transition effects, used for navigation and action buttons throughout the app.
+
+### AI Generation
+
+- **Channel the Void (Site Detail)** — Generates a brand-new journal entry written by the void. The AI roleplays as a sentient cosmic horror writing in a cursed journal while the user is away, referencing random eldritch entities and escalating based on prior entries.
+- **Channel the Void (Entry Detail)** — Takes the existing entry content and continues it with AI-generated cosmic horror. The continuation is appended below a separator, preserving the original text. Each channeling escalates the madness further.
+- Generation runs locally via Ollama with `temperature: 1.0` for maximum hallucination. Response times are 5-15s (GPU) or 30-90s (CPU).
 
 ---
 
@@ -223,6 +248,15 @@ Custom properties under the `void.*` prefix:
 | `void.entropy.symbols` | `⛧ ☠ ☥ ⛥ ⛤ ⚸` | Symbols injected during corruption |
 | `void.entities.enabled` | `true` | Enable entity detection |
 | `void.entities.warnOnDetection` | `true` | Warn when entities are found |
+
+Ollama settings under the `void.ollama.*` prefix:
+
+| Property | Default | Description |
+|---|---|---|
+| `void.ollama.url` | `http://localhost:11434` | Ollama API base URL |
+| `void.ollama.model` | `llama3.1:8b` | Model to use for generation |
+| `void.ollama.temperature` | `1.0` | Sampling temperature (higher = crazier) |
+| `void.ollama.maxTokens` | `1024` | Max tokens per generation |
 
 ### Entropy Modes
 
