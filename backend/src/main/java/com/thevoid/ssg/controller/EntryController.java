@@ -3,9 +3,12 @@ package com.thevoid.ssg.controller;
 import com.thevoid.ssg.model.dto.CorruptionPreviewDto;
 import com.thevoid.ssg.model.dto.EntryDto;
 import com.thevoid.ssg.service.EntryService;
+import com.thevoid.ssg.service.VoidJournalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.NoSuchElementException;
 
 import java.util.List;
 
@@ -15,6 +18,7 @@ import java.util.List;
 public class EntryController {
 
     private final EntryService entryService;
+    private final VoidJournalService voidJournalService;
 
     @GetMapping
     public ResponseEntity<List<EntryDto>> getEntries(@PathVariable String siteId) {
@@ -77,5 +81,29 @@ public class EntryController {
         return entryService.previewCorruption(siteId, slug, viewerHash)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{slug}/channel")
+    public ResponseEntity<?> channelEntry(@PathVariable String siteId, @PathVariable String slug) {
+        try {
+            EntryDto channeled = voidJournalService.channelEntry(siteId, slug);
+            return ResponseEntity.ok(channeled);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(java.util.Map.of("error", e.getMessage() != null ? e.getMessage() : "Unknown error"));
+        }
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<?> generateEntry(@PathVariable String siteId) {
+        try {
+            EntryDto generated = voidJournalService.generateJournalEntry(siteId);
+            return ResponseEntity.ok(generated);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(java.util.Map.of("error", e.getMessage() != null ? e.getMessage() : "Unknown error"));
+        }
     }
 }

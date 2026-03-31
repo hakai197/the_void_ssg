@@ -22,3 +22,10 @@ spring:
   shell:
     interactive:
       enabled: true
+
+void:
+  ollama:
+    base-url: http://localhost:11434
+    model: llama3.1:8b
+    temperature: 1.5
+    max-tokens: 4096

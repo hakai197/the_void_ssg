@@ -22,6 +22,7 @@ export default function EntryDetailPage() {
   const [showCorruption, setShowCorruption] = useState(false);
   const [corruptionLoading, setCorruptionLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [channeling, setChanneling] = useState(false);
 
   useEffect(() => {
     if (siteId && slug) loadEntry();
@@ -81,6 +82,19 @@ export default function EntryDetailPage() {
     }
   };
 
+  const channelEntry = async () => {
+    try {
+      setChanneling(true);
+      setError(null);
+      await entryApi.channel(siteId!, slug!);
+      await loadEntry();
+    } catch {
+      setError('The void could not channel through this entry.');
+    } finally {
+      setChanneling(false);
+    }
+  };
+
   if (loading) return <div className="loading">Retrieving entry from the abyss...</div>;
   if (!entry) return <div className="error-message">Entry not found in the void.</div>;
 
@@ -97,6 +111,10 @@ export default function EntryDetailPage() {
         </div>
         <GooeyNav
           items={[
+            {
+              label: channeling ? '⏳ Channeling...' : '👁️ Channel the Void',
+              onClick: channeling ? undefined : channelEntry,
+            },
             {
               label: corruptionLoading ? '⏳ Corrupting...' : '🌀 Preview Corruption',
               onClick: corruptionLoading ? undefined : previewCorruption,

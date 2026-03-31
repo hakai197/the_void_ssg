@@ -29,6 +29,7 @@ export default function SiteDetailPage() {
   // Tab state
   const [activeTab, setActiveTab] = useState<'entries' | 'builds' | 'settings'>('entries');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     if (siteId) loadAll();
@@ -93,6 +94,19 @@ export default function SiteDetailPage() {
       setError('Failed to delete site.');
     } finally {
       setShowDeleteConfirm(false);
+    }
+  };
+
+  const generateEntry = async () => {
+    try {
+      setGenerating(true);
+      const res = await entryApi.generate(siteId!);
+      loadAll();
+      navigate(`/site/${siteId}/entries/${res.data.slug}`);
+    } catch {
+      setError('The void could not be channeled. Check your ANTHROPIC_API_KEY.');
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -166,7 +180,17 @@ export default function SiteDetailPage() {
         <div className="tab-content">
           <div className="section-header">
             <h3>Entries</h3>
-            <Link to={`/site/${siteId}/entries/new`} className="btn-primary btn-small">+ New Entry</Link>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                className="btn-primary btn-small"
+                onClick={generateEntry}
+                disabled={generating}
+                title="Let Claude channel a hallucinatory journal entry from the void"
+              >
+                {generating ? '🌀 Channeling...' : '👁️ Channel the Void'}
+              </button>
+              <Link to={`/site/${siteId}/entries/new`} className="btn-primary btn-small">+ New Entry</Link>
+            </div>
           </div>
           {entries.length === 0 ? (
             <div className="empty-state">No entries yet. Write something into the void.</div>

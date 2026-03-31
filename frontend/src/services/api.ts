@@ -84,6 +84,10 @@ export const entryApi = {
     api.get<CorruptionPreview>(`/sites/${siteId}/entries/${slug}/corrupt`, {
       headers: { 'X-Viewer-Hash': viewerHash }
     }),
+  generate: (siteId: string) =>
+    api.post<Entry>(`/sites/${siteId}/entries/generate`),
+  channel: (siteId: string, slug: string) =>
+    api.post<Entry>(`/sites/${siteId}/entries/${slug}/channel`),
 };
 
 export const buildApi = {
